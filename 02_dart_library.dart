@@ -54,12 +54,12 @@ void main(List<String> args) {
   assert('hello'.trim() == 'hello');
   assert(''.isEmpty);
   assert(' '.isNotEmpty);
-  
+
   //替换部分字符串
   var greetingTemplate = 'Hello, NAME!';
   var greeting = greetingTemplate.replaceAll(RegExp('NAME'), 'Bob');
   assert(greeting != greetingTemplate);
-  
+
   //构建一个字符串
   var sb = StringBuffer();
   sb
@@ -196,7 +196,188 @@ void main(List<String> args) {
 // types the key and value should be.
   var nobleGases1 = Map<int, String>();
 
- // 通过大括号语法可以为 map 添加，获取，设置元素。使用 方法从 map 中移除键值对。remove()
-  var nobleGases2={54:'xenon'};
-  
+  // 通过大括号语法可以为 map 添加，获取，设置元素。使用 方法从 map 中移除键值对。remove()
+  var nobleGases2 = {54: 'xenon'};
+  assert(nobleGases2[54] == 'xenon');
+  assert(nobleGases2.containsKey(54));
+  // Remove a key and its value.
+  nobleGases2.remove(54);
+  assert(!nobleGases2.containsKey(54));
+
+  //可以从一个 map 中检索出所有的 key 或所有的 value：
+
+// Get all the keys as an unordered collection
+// (an Iterable).
+  var keys = hawaiianBeaches.keys;
+
+  assert(keys.length == 3);
+  assert(Set.from(keys).contains('Oahu'));
+
+// Get all the values as an unordered collection
+// (an Iterable of Lists).
+  var values = hawaiianBeaches.values;
+  assert(values.length == 3);
+  assert(values.any((v) => v.contains('Waikiki')));
+
+//使用 containsKey() 方法检查一个 map 中是否包含某个key 。因为 map 中的 value 可能会是 null ，
+//所有通过 key 获取 value，并通过判断 value 是否为 null 来判断 key 是否存在是不可靠的。
+  assert(hawaiianBeaches.containsKey('Oahu'));
+  assert(!hawaiianBeaches.containsKey('Florida'));
+
+//如果当且仅当该 key 不存在于 map 中，且要为这个 key 赋值，
+//可使用 putIfAbsent() 方法。该方法需要一个方法返回这个 value。
+  /*var teamAssignments = <String, String>{};
+ teamAssignments.putIfAbsent('Catcher', () => pickToughestKid());
+ assert(teamAssignments['Catcher'] != null);*/
+
+  //公共集合方法
+// List, Set, 和 Map 共享许多集合中的常用功能。其中一些常见功能由 Iterable 类定义，这些函数由 List 和 Set 实现。
+//使用 isEmpty 和 isNotEmpty 方法可以检查 list， set 或 map 对象中是否包含元素：
+  var coffees = <String>[];
+  var teas = ['green', 'black', 'chamomile', 'earl grey'];
+  assert(coffees.isEmpty);
+  assert(teas.isNotEmpty);
+
+//使用 forEach() 可以让 list， set 或 map 对象中的每个元素都使用一个方法。
+//var teas1 = ['green', 'black', 'chamomile', 'earl grey'];
+  teas.forEach((tea) => print('I drink $tea'));
+
+//当在 map 对象上调用 `forEach() 方法时，函数必须带两个参数（key 和 value）：
+  hawaiianBeaches.forEach((k, v) {
+    print('I want to visit $k and swim at $v');
+    // I want to visit Oahu and swim at
+    // [Waikiki, Kailua, Waimanalo], etc.
+  });
+
+//Iterable 提供 map() 方法，这个方法将所有结果返回到一个对象中。
+  var loudTeas = teas.map((tea) => tea.toUpperCase());
+  loudTeas.forEach(print);
+
+  //使用 map().toList() 或 map().toSet() ，可以强制在每个项目上立即调用函数。
+  var loudTeas1 = teas.map((tea) => tea.toUpperCase()).toList();
+
+//使用 Iterable 的 where() 方法可以获取所有匹配条件的元素。
+//使用 Iterable 的 any() 和 every() 方法可以检查部分或者所有元素是否匹配某个条件。
+//var teas = ['green', 'black', 'chamomile', 'earl grey'];
+
+// Chamomile is not caffeinated.
+  bool isDecaffeinated(String teaName) => teaName == 'chamomile';
+
+// Use where() to find only the items that return true
+// from the provided function.
+  var decaffeinatedTeas = teas.where((tea) => isDecaffeinated(tea));
+// or teas.where(isDecaffeinated)
+
+// Use any() to check whether at least one item in the
+// collection satisfies a condition.
+  assert(teas.any(isDecaffeinated));
+
+// Use every() to check whether all the items in a
+// collection satisfy a condition.
+  assert(!teas.every(isDecaffeinated));
+
+  //#URIs
+  //编码和解码完整合法的URI
+  //使用 encodeFull() 和 decodeFull() 方法，
+  //对 URI 中除了特殊字符（例如 /， :， &， #）以外的字符进行编解码，
+  //这些方法非常适合编解码完整合法的 URI，并保留 URI 中的特殊字符。
+  var uri = 'https://example.org/api?foo=some message';
+
+  var encoded = Uri.encodeFull(uri);
+  assert(encoded == 'https://example.org/api?foo=some%20message');
+
+  var decoded = Uri.decodeFull(encoded);
+  assert(uri == decoded);
+
+  //编码和解码 URI 组件
+  //使用 encodeComponent() 和 decodeComponent() 方法，
+  //对 URI 中具有特殊含义的所有字符串字符，特殊字符包括（但不限于）/， &，和 :。
+  var uri1 = 'https://example.org/api?foo=some message';
+
+  var encoded1 = Uri.encodeComponent(uri1);
+  assert(encoded1 == 'https%3A%2F%2Fexample.org%2Fapi%3Ffoo%3Dsome%20message');
+
+  var decoded1 = Uri.decodeComponent(encoded1);
+  assert(uri1 == decoded1);
+
+  //解析 URI
+  //使用 Uri 对象的字段（例如 path），来获取一个 Uri 对象或者 URI 字符串的一部分。
+  //使用 parse() 静态方法，可以使用字符串创建 Uri 对象。
+  var uri3 = Uri.parse('https://example.org:8080/foo/bar#frag');
+
+  assert(uri3.scheme == 'https');
+  assert(uri3.host == 'example.org');
+  assert(uri3.path == '/foo/bar');
+  assert(uri3.fragment == 'frag');
+  assert(uri3.origin == 'https://example.org:8080');
+
+//构建 URI
+//使用 Uri() 构造函数，可以将各组件部分构建成 URI 。
+  var uri4 = Uri(
+      scheme: 'https',
+      host: 'example.org',
+      path: '/foo/bar',
+      fragment: 'frag',
+      queryParameters: {'lang': 'dart'});
+  assert(uri4.toString() == 'https://example.org/foo/bar?lang=dart#frag');
+
+//If you don’t need to specify a fragment,
+//to create a URI with a http or https scheme, you can instead use the Uri.http or Uri.https factory constructors:
+  var httpUri = Uri.http('example.org', '/foo/bar', {'lang': 'dart'});
+  var httpsUri = Uri.https('example.org', '/foo/bar', {'lang': 'dart'});
+
+  assert(httpUri.toString() == 'http://example.org/foo/bar?lang=dart');
+  assert(httpsUri.toString() == 'https://example.org/foo/bar?lang=dart');
+
+  //#日期和时间
+  //DateTime 对象代表某个时刻，时区可以是 UTC 或者本地时区。
+  //DateTime 对象可以通过若干构造函数和方法创建：
+  // Get the current date and time.
+  var now = DateTime.now();
+
+// Create a new DateTime with the local time zone.
+  var y2k = DateTime(2000); // January 1, 2000
+
+// Specify the month and day.
+  y2k = DateTime(2000, 1, 2); // January 2, 2000
+
+// Specify the date as a UTC time.
+  y2k = DateTime.utc(2000); // 1/1/2000, UTC
+
+// Specify a date and time in ms since the Unix epoch.
+  y2k = DateTime.fromMillisecondsSinceEpoch(946684800000, isUtc: true);
+
+// Parse an ISO 8601 date in the UTC time zone.
+  y2k = DateTime.parse('2000-01-01T00:00:00Z');
+
+// Create a new DateTime from an existing one, adjusting just some properties:
+  var sameTimeLastYear = now.copyWith(year: now.year - 1);
+
+  // 日期中 millisecondsSinceEpoch 属性返回自 “Unix 纪元（January 1, 1970, UTC）”以来的毫秒数：
+
+  // 1/1/2000, UTC
+  var y3k = DateTime.utc(2000);
+  assert(y3k.millisecondsSinceEpoch == 946684800000);
+
+// 1/1/1970, UTC
+  var unixEpoch = DateTime.utc(1970);
+  assert(unixEpoch.millisecondsSinceEpoch == 0);
+
+  //Use the Duration class to calculate the difference between two dates and to shift a date forward or backward:
+  var y1k = DateTime.utc(2000);
+
+// Add one year.
+var y2001 = y1k.add(const Duration(days: 366));
+assert(y2001.year == 2001);
+
+// Subtract 30 days.
+var december2000 = y2001.subtract(const Duration(days: 30));
+assert(december2000.year == 2000);
+assert(december2000.month == 12);
+
+// Calculate the difference between two dates.
+// Returns a Duration object.
+var duration = y2001.difference(y1k);
+assert(duration.inDays == 366); // y2k was a leap year.
+
 }
