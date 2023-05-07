@@ -54,10 +54,12 @@ void main(List<String> args) {
   assert('hello'.trim() == 'hello');
   assert(''.isEmpty);
   assert(' '.isNotEmpty);
+  
   //替换部分字符串
   var greetingTemplate = 'Hello, NAME!';
   var greeting = greetingTemplate.replaceAll(RegExp('NAME'), 'Bob');
   assert(greeting != greetingTemplate);
+  
   //构建一个字符串
   var sb = StringBuffer();
   sb
