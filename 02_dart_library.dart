@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'dart:convert';
 void main(List<String> args) {
   //数字
   assert(int.parse('42') == 42);
@@ -381,4 +383,94 @@ var duration = y2001.difference(y1k);
 assert(duration.inDays == 366); // y2k was a leap year.
 
 
+//三角法
+//数学库提供基本的三角函数：
+assert(cos(pi) == -1.0);
+
+// Sine
+var degrees = 30;
+var radians = degrees * (pi / 180);
+// radians is now 0.52359.
+var sinOf30degrees = sin(radians);
+// sin 30° = 0.5
+assert((sinOf30degrees - 0.5).abs() < 0.01);
+
+//最大值和最小值
+//数学库提供和方法：max()min()
+assert(max(1, 1000) == 1000);
+assert(min(1, -1000) == -1000);
+
+//数学常量
+//在数学库中查找您喜欢的常量（pi、e 等）：
+// See the Math library for additional constants.
+print(e); // 2.718281828459045
+print(pi); // 3.141592653589793
+print(sqrt2); // 1.4142135623730951
+
+//随机数
+//使用 Random 类生成随机数。您可以 （可选）向随机构造函数提供种子。
+var random = Random();
+random.nextDouble(); // Between 0.0 and 1.0: [0, 1)
+random.nextInt(10); // Between 0 and 9.
+//可以生成随机布尔值：
+var random1 = Random();
+random1.nextBool(); // true or false
+
+
+//#dart：convert - 解码和编码 JSON、UTF-8 等
+//要使用此库，请导入 dart：convert。
+//#解码和编码 JSON
+// NOTE: Be sure to use double quotes ("),
+// not single quotes ('), inside the JSON string.
+// This string is JSON, not Dart.
+var jsonString = '''
+  [
+    {"score": 40},
+    {"score": 80}
+  ]
+''';
+
+var scores = jsonDecode(jsonString);
+assert(scores is List);
+
+var firstScore = scores[0];
+assert(firstScore is Map);
+assert(firstScore['score'] == 40);
+
+//使用 以下命令将受支持的 Dart 对象编码为 JSON 格式的字符串：jsonEncode()
+var scores1 = [
+  {'score1': 40},
+  {'score1': 80},
+  {'score1': 100, 'overtime': true, 'special_guest': null}
+];
+
+var jsonText = jsonEncode(scores1);
+assert(jsonText ==
+    '[{"score1":40},{"score1":80},'
+        '{"score1":100,"overtime":true,'
+        '"special_guest":null}]');
+//仅 int、double、String、bool、null、List 或 Map 类型的对象（使用 字符串键）可直接编码为 JSON。列表和映射对象是 递归编码。
+//有两个选项可用于对非直接对象进行编码 可编码。第一个是使用第二个参数调用：a 返回可直接编码对象的函数。
+//你的第二个 选项是省略第二个参数，在这种情况下，编码器调用 对象的方法。jsonEncode()toJson()
+
+//解码和编码 UTF-8 字符
+//用于将 UTF8 编码的字节解码为 Dart 字符串：utf8.decode()
+List<int> utf8Bytes = [
+  0xc3, 0x8e, 0xc3, 0xb1, 0xc5, 0xa3, 0xc3, 0xa9,
+  0x72, 0xc3, 0xb1, 0xc3, 0xa5, 0xc5, 0xa3, 0xc3,
+  0xae, 0xc3, 0xb6, 0xc3, 0xb1, 0xc3, 0xa5, 0xc4,
+  0xbc, 0xc3, 0xae, 0xc5, 0xbe, 0xc3, 0xa5, 0xc5,
+  0xa3, 0xc3, 0xae, 0xe1, 0xbb, 0x9d, 0xc3, 0xb1
+];
+
+var funnyWord = utf8.decode(utf8Bytes);
+
+assert(funnyWord == 'Îñţérñåţîöñåļîžåţîờñ');
+
+//dart：html - 基于浏览器的应用程序
+//若要在 Web 应用中使用 HTML 库，请导入 dart：html：
+
+
 }
+
+
